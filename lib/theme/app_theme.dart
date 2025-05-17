@@ -42,14 +42,11 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
-        bodyLarge: TextStyle(
-          fontSize: 16,
-          color: textGrey,
-        ),
+        bodyLarge: TextStyle(fontSize: 16, color: textGrey),
       ),
     );
   }
-  
+
   static ThemeData get lightTheme {
     return ThemeData.light().copyWith(
       scaffoldBackgroundColor: Colors.white,
@@ -70,9 +67,7 @@ class AppTheme {
       cardTheme: CardTheme(
         color: Colors.white,
         elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: primaryOrange,
@@ -89,12 +84,8 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: Colors.black,
         ),
-        bodyLarge: TextStyle(
-          fontSize: 16,
-          color: textGrey,
-        ),
+        bodyLarge: TextStyle(fontSize: 16, color: textGrey),
       ),
     );
   }
-  }
-} 
+}

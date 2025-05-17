@@ -18,38 +18,188 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="A Flutter Items Dashboard">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="untitled1">
+  <meta name="apple-mobile-web-app-title" content="Items Dashboard">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>untitled1</title>  <link rel="manifest" href="manifest.json">
+  <title>Items Dashboard</title>
+  <link rel="manifest" href="manifest.json">
 
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   
   <script>
     // Your web app's Firebase configuration
     const firebaseConfig = {
-      apiKey: "AIzaSyAl9Y5ltFXhMbiZ_6U1SA2LH1fRD6NoWrI",
+      apiKey: "AIzaSyCNvIRIr1kQV5cC9xnbHlCjYwTXmuuY5L0",
       authDomain: "flutter-web-app-d9ab2.firebaseapp.com",
       projectId: "flutter-web-app-d9ab2",
-      storageBucket: "flutter-web-app-d9ab2.firebasestorage.app",
-      messagingSenderId: "526903582031",
-      appId: "1:526903582031:web:2176b6f440cb2abc78793a",
-      measurementId: "G-FLLRTFRP4S"
+      storageBucket: "flutter-web-app-d9ab2.appspot.com",
+      messagingSenderId: "795049569757",
+      appId: "1:795049569757:web:2e1ad9ddd8b13a6c74bb8e"
     };
-
+    
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+    console.log("Firebase initialized in web context");
+
+    // Create a global function to fetch items that can be called from Dart
+    window.getFirestoreItems = function() {
+      return firebase.firestore().collection('items').get()
+        .then(snapshot => {
+          const items = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            items.push({
+              id: doc.id,
+              ...data
+            });
+          });
+          return items;
+        })
+        .catch(error => {
+          console.error("Error fetching items:", error);
+          return [];
+        });
+    };
+
+    // Function to add a new item
+    window.addFirestoreItem = function(item) {
+      return firebase.firestore().collection('items').add(item)
+        .then(docRef => {
+          console.log("Document written with ID: ", docRef.id);
+          return docRef.id;
+        })
+        .catch(error => {
+          console.error("Error adding document: ", error);
+          throw error;
+        });
+    };
+
+    // Function to get a single item by ID
+    window.getFirestoreItemById = function(itemId) {
+      return firebase.firestore().collection('items').doc(itemId).get()
+        .then(doc => {
+          if (doc.exists) {
+            return {
+              id: doc.id,
+              ...doc.data()
+            };
+          } else {
+            console.log("No such document!");
+            return null;
+          }
+        })
+        .catch(error => {
+          console.error("Error getting document:", error);
+          throw error;
+        });
+    };
+
+    // Function to update an item
+    window.updateFirestoreItem = function(itemId, data) {
+      return firebase.firestore().collection('items').doc(itemId).update(data)
+        .then(() => {
+          console.log("Document successfully updated!");
+          return true;
+        })
+        .catch(error => {
+          console.error("Error updating document: ", error);
+          throw error;
+        });
+    };
+
+    // Function to delete an item
+    window.deleteFirestoreItem = function(itemId) {
+      return firebase.firestore().collection('items').doc(itemId).delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+          return true;
+        })
+        .catch(error => {
+          console.error("Error removing document: ", error);
+          throw error;
+        });
+    };
+
+    // If there are no items in the collection, add some mock data
+    firebase.firestore().collection('items').get().then(snapshot => {
+      if (snapshot.empty) {
+        console.log("No items found, adding sample data");
+        
+        const mockItems = [
+          {
+            title: 'Project Alpha',
+            description: 'A strategic initiative to improve customer engagement',
+            imageUrl: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0',
+            createdAt: new Date().toISOString(),
+            category: 'Strategic',
+            status: 'Active',
+            dateRange: 'May 1 - Jul 30, 2023',
+            assignedUsers: ['Alice', 'Bob', 'Charlie'],
+            totalTasks: 24,
+            completedTasks: 8,
+          },
+          {
+            title: 'Website Redesign',
+            description: 'Modernize our web presence with a fresh look and feel',
+            imageUrl: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d',
+            createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+            category: 'Development',
+            status: 'In Progress',
+            dateRange: 'Jun 1 - Aug 15, 2023',
+            assignedUsers: ['Dave', 'Eve', 'Frank'],
+            totalTasks: 18,
+            completedTasks: 6,
+          },
+          {
+            title: 'Mobile App Upgrade',
+            description: 'Adding new features and improving performance',
+            imageUrl: 'https://images.unsplash.com/photo-1551650975-87deedd944c3',
+            createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+            category: 'Development',
+            status: 'On Hold',
+            dateRange: 'Jul 1 - Sep 30, 2023',
+            assignedUsers: ['Grace', 'Hank'],
+            totalTasks: 32,
+            completedTasks: 12,
+          },
+          {
+            title: 'Marketing Campaign',
+            description: 'Q3 digital marketing initiative across all channels',
+            imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f',
+            createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+            category: 'Marketing',
+            status: 'Completed',
+            dateRange: 'Apr 15 - Jun 15, 2023',
+            assignedUsers: ['Irene', 'Jack', 'Kelly', 'Liam'],
+            totalTasks: 45,
+            completedTasks: 45,
+          }
+        ];
+        
+        // Add all the mock items
+        const batch = firebase.firestore().batch();
+        mockItems.forEach(item => {
+          const docRef = firebase.firestore().collection('items').doc();
+          batch.set(docRef, item);
+        });
+        
+        batch.commit().then(() => {
+          console.log("Mock data added successfully");
+        }).catch(error => {
+          console.error("Error adding mock data: ", error);
+        });
+      }
+    });
   </script>
 </head>
 <body>

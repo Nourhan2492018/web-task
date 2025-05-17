@@ -26,12 +26,14 @@ class Item {
       id: documentId,
       title: data['title'] ?? '',
       imageUrl: data['imageUrl'] ?? '',
-      startDate: (data['startDate'] != null) 
-        ? (data['startDate'] as Timestamp).toDate() 
-        : DateTime.now(),
-      endDate: (data['endDate'] != null) 
-        ? (data['endDate'] as Timestamp).toDate() 
-        : DateTime.now().add(const Duration(days: 7)),
+      startDate:
+          (data['startDate'] != null)
+              ? (data['startDate'] as Timestamp).toDate()
+              : DateTime.now(),
+      endDate:
+          (data['endDate'] != null)
+              ? (data['endDate'] as Timestamp).toDate()
+              : DateTime.now().add(const Duration(days: 7)),
       status: data['status'] ?? 'Unknown',
       count: data['count'] ?? 0,
     );

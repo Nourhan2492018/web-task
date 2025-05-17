@@ -8,24 +8,14 @@ class ItemsResult {
   final DataStatus status;
   final String? errorMessage;
 
-  ItemsResult({
-    required this.items,
-    required this.status,
-    this.errorMessage,
-  });
+  ItemsResult({required this.items, required this.status, this.errorMessage});
 
   factory ItemsResult.loading() {
-    return ItemsResult(
-      items: [],
-      status: DataStatus.loading,
-    );
+    return ItemsResult(items: [], status: DataStatus.loading);
   }
 
   factory ItemsResult.success(List<Item> items) {
-    return ItemsResult(
-      items: items,
-      status: DataStatus.success,
-    );
+    return ItemsResult(items: items, status: DataStatus.success);
   }
 
   factory ItemsResult.error(String message) {
@@ -39,7 +29,7 @@ class ItemsResult {
 
 class ItemService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   // Get a stream of items from Firestore
   Stream<ItemsResult> getItems() {
     return _firestore
@@ -47,30 +37,34 @@ class ItemService {
         .snapshots()
         .map((snapshot) {
           try {
-            final items = snapshot.docs
-                .map((doc) => Item.fromFirestore(doc.data(), doc.id))
-                .toList();
+            final items =
+                snapshot.docs
+                    .map((doc) => Item.fromFirestore(doc.data(), doc.id))
+                    .toList();
             return ItemsResult.success(items);
           } catch (e) {
             return ItemsResult.error('Failed to parse item data: $e');
           }
         })
-        .handleError((error) => ItemsResult.error('Failed to fetch items: $error'));
+        .handleError(
+          (error) => ItemsResult.error('Failed to fetch items: $error'),
+        );
   }
-  
+
   // Get items as a Future (one-time fetch)
   Future<ItemsResult> getItemsOnce() async {
     try {
       final snapshot = await _firestore.collection('items').get();
-      final items = snapshot.docs
-          .map((doc) => Item.fromFirestore(doc.data(), doc.id))
-          .toList();
+      final items =
+          snapshot.docs
+              .map((doc) => Item.fromFirestore(doc.data(), doc.id))
+              .toList();
       return ItemsResult.success(items);
     } catch (e) {
       return ItemsResult.error('Failed to fetch items: $e');
     }
   }
-  
+
   // Get a single item by ID
   Future<Item?> getItemById(String id) async {
     try {

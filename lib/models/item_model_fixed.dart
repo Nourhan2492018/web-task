@@ -31,11 +31,12 @@ class ItemModel {
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
-      createdAt: map['createdAt'] != null 
-          ? (map['createdAt'] is DateTime 
-              ? map['createdAt'] 
-              : DateTime.parse(map['createdAt'].toString())) 
-          : DateTime.now(),
+      createdAt:
+          map['createdAt'] != null
+              ? (map['createdAt'] is DateTime
+                  ? map['createdAt']
+                  : DateTime.parse(map['createdAt'].toString()))
+              : DateTime.now(),
       category: map['category'] ?? '',
       status: map['status'] ?? 'Pending Approval',
       dateRange: map['dateRange'] ?? '',
@@ -60,19 +61,3 @@ class ItemModel {
     };
   }
 }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'description': description,
-      'imageUrl': imageUrl,
-      'createdAt': createdAt,
-      'category': category,
-      'status': status,
-      'dateRange': dateRange,
-      'assignedUsers': assignedUsers,
-      'totalTasks': totalTasks,
-      'completedTasks': completedTasks,
-    };
-  }
-} 

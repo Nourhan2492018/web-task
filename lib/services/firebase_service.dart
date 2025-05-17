@@ -26,7 +26,7 @@ class FirebaseService {
       print('Error in Firestore stream: $error'); // Debug print
       throw error;
     });
-  }dart pub global activate flutterfire_cli
+  }
 
   // Get a single item by ID
   Future<DocumentSnapshot> getItemById(String id) async {
@@ -64,4 +64,4 @@ class FirebaseService {
       rethrow;
     }
   }
-} 
+}
